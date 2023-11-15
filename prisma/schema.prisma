@@ -17,7 +17,8 @@ model Workspace {
   iconId      String
   inTrash     String?
 
-  folder    Folder[]  
+  folder    Folder[]
+  file    File[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -35,9 +36,29 @@ model Folder {
 
   workspace   Workspace  @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   workspaceId String
+  
+  file    File[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([workspaceId])
+}
+
+model File {
+  id String @id @default(uuid()) 
+  createdAt DateTime @default(now()) 
+  title String
+  iconId String
+  data String?
+  inTrash String?
+  bannerUrl String?
+  workspaceId String 
+  folderId String 
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id])
+  folder Folder @relation(fields: [folderId], references: [id])
+
+  @@index([workspaceId])
+  @@index([folderId])
 }
